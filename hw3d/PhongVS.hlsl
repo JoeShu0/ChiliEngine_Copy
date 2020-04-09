@@ -12,9 +12,10 @@ struct VSOut
 	float3 worldnormal : WNormal;
     float3 viewPos : VPosition;
     float3 viewnormal : VNormal;
+	float2 Texcoord : Texcoord;
 };
 
-VSOut main(float3 pos : Position, float3 n : Normal)
+VSOut main(float3 pos : Position, float3 n : Normal, float2 tc : Texcoord)
 {
 	VSOut vso;
 	vso.worldPos = (float3)mul(float4(pos, 1.0f), model);
@@ -22,5 +23,6 @@ VSOut main(float3 pos : Position, float3 n : Normal)
     vso.viewPos = (float3) mul(float4(pos, 1.0f), modelView);
     vso.viewnormal = mul(n, (float3x3) modelView);
     vso.ScreenPos = mul(float4(pos, 1.0f), modelViewProj);
+	vso.Texcoord = tc;
 	return vso;
 }

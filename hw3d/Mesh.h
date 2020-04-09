@@ -63,7 +63,7 @@ private:
 	//we want to pass in the GFX, const reference to aiMesh and a array of aiMaterial for that mesh
 	//mateials should be aiMaterial** is aptr to an array of ptrs(PP), Since the Ptr to array and the array of ptr to aiMaterial are all in assimp, it should be all const
 	//So we are passing the mareial ptr loaded to this func as a const ptr to an array of const ptrs to aiMaterials!!!!!! 
-	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial *const *pMaterials);
 	std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node);
 private:
 	std::unique_ptr<Node> pRoot;//this model class only keep track of root node

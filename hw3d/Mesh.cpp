@@ -277,7 +277,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		vbuf.EmplaceBack(
 			*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mVertices[i]),
 			*reinterpret_cast<dx::XMFLOAT3*>(&mesh.mNormals[i]),
-			*reinterpret_cast<dx::XMFLOAT2*>(&mesh.mTextureCoords[0][i])
+			*reinterpret_cast<dx::XMFLOAT2*>(&mesh.mTextureCoords[0][i])//load UV0 in, Max 8 UV sets supported
 		);
 	}
 
@@ -294,12 +294,13 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	std::vector<std::unique_ptr<Bind::Bindable>> bindablePtrs;
 
-	//Bind Materials
-	if (mesh.mMaterialIndex >= 0)
+	//Bind Materials, mMaterialIndex means 1 mesh can only have 1 material, 
+	//if a imported mesh have multiple material, it will be splited
+	if (mesh.mMaterialIndex >= 0)//if a mesh don't have a material, index will be negtive
 	{
 		using namespace std::string_literals;
 		auto &material = *pMaterials[mesh.mMaterialIndex];
-		aiString texFileName;
+		aiString texFileName;//Assimp special string object
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
 		bindablePtrs.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile("Models\\nano_textured\\"s + texFileName.C_Str())));
 		bindablePtrs.push_back(std::make_unique<Bind::Sampler>(gfx));
@@ -319,10 +320,10 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	struct PSMaterialConstant
 	{
-		DirectX::XMFLOAT3 color = { 0.6f,0.6f,0.8f };
+		//DirectX::XMFLOAT3 color = { 0.6f,0.6f,0.8f };
 		float specularIntensity = 0.6f;
 		float specularPower = 30.0f;
-		float padding[3];
+		float padding[2];
 	} pmc;
 	bindablePtrs.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
 
