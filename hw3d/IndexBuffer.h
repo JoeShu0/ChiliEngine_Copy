@@ -1,0 +1,17 @@
+#pragma once
+#include "Bindable.h"
+
+namespace Bind
+{
+	class IndexBuffer : public Bindable
+	{
+		//this is just the buffer class to store index
+	public:
+		IndexBuffer(Graphics& gfx, const std::vector<unsigned short>& indices);
+		void Bind(Graphics& gfx) noexcept override;
+		UINT GetCount() const noexcept;
+	protected:
+		UINT count;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
+	};
+}
