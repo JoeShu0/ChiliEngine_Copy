@@ -294,15 +294,24 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	std::vector<std::unique_ptr<Bind::Bindable>> bindablePtrs;
 
+	bool hasSpecular = false;
 	//Bind Materials, mMaterialIndex means 1 mesh can only have 1 material, 
 	//if a imported mesh have multiple material, it will be splited
 	if (mesh.mMaterialIndex >= 0)//if a mesh don't have a material, index will be negtive
 	{
 		using namespace std::string_literals;
+		const auto base = "Models\\nano_textured\\"s;
+
 		auto &material = *pMaterials[mesh.mMaterialIndex];
 		aiString texFileName;//Assimp special string object
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
-		bindablePtrs.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile("Models\\nano_textured\\"s + texFileName.C_Str())));
+		bindablePtrs.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(base + texFileName.C_Str())));
+		//Check if the Specular Texture  exist
+		if(material.GetTexture(aiTextureType_SPECULAR, 0, &texFileName) == aiReturn_SUCCESS)
+		{
+			bindablePtrs.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(base + texFileName.C_Str()), 1));
+			hasSpecular = true;
+		}
 		bindablePtrs.push_back(std::make_unique<Bind::Sampler>(gfx));
 	}
 
@@ -313,19 +322,28 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	auto pvs = std::make_unique<Bind::VertexShader>(gfx, std::wstring(L"PhongVS.cso"));
 	auto pvsbc = pvs->GetBytecode();
 	bindablePtrs.push_back(std::move(pvs));
-
-	bindablePtrs.push_back(std::make_unique<Bind::PixelShader>(gfx, std::wstring(L"PhongPS.cso")));
+	if (hasSpecular)
+	{
+		bindablePtrs.push_back(std::make_unique<Bind::PixelShader>(gfx, std::wstring(L"PhongPSSpecular.cso")));
+	}
+	else
+	{
+		bindablePtrs.push_back(std::make_unique<Bind::PixelShader>(gfx, std::wstring(L"PhongPS.cso")));
+		
+		struct PSMaterialConstant
+		{
+			//DirectX::XMFLOAT3 color = { 0.6f,0.6f,0.8f };
+			float specularIntensity = 0.8f;
+			float specularPower = 40.0f;
+			float padding[2];
+		} pmc;
+		bindablePtrs.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
+	}
+	
 
 	bindablePtrs.push_back(std::make_unique<Bind::InputLayout>(gfx, vbuf.GetLayout().GetD3DLayout(), pvsbc));
 
-	struct PSMaterialConstant
-	{
-		//DirectX::XMFLOAT3 color = { 0.6f,0.6f,0.8f };
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
-		float padding[2];
-	} pmc;
-	bindablePtrs.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
+	
 
 	return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
 }
