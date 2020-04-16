@@ -230,9 +230,6 @@
     <ClInclude Include="VertexShader.h">
       <Filter>头文件\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="DrawableBase.h">
-      <Filter>头文件\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="WindowsThrowMacros.h">
       <Filter>头文件\Macros</Filter>
     </ClInclude>

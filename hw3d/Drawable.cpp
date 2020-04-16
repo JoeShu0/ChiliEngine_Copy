@@ -13,24 +13,20 @@ void Drawable::Draw(Graphics & gfx) const noxnd
 	{
 		b->Bind(gfx);
 	}
-	for (auto& b : GetStaticBinds())
-	{
-		b->Bind(gfx);
-	}
 	gfx.DrawIndexed(pIndexBuffer->GetCount());//here we need the Ptr to indexbuffer for index count
 }
 
-void Drawable::AddBind(std::unique_ptr<Bindable> bind) noxnd
+void Drawable::AddBind(std::shared_ptr<Bindable> bind) noxnd
 {
-	assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
+	//special cases for index buffer
+	if (typeid(*bind) == typeid(Bind::IndexBuffer))
+	{
+		assert("Binding multiple index buffers not allowed" && pIndexBuffer == nullptr);
+		// de-reference for the bind shared_ptr, cast into reference of IndexBuffer, get its address assign to the pIndexBuffer
+		pIndexBuffer = &static_cast<IndexBuffer&>(*bind);
+	}
 	binds.push_back(std::move(bind));
 	//We construct the Binadable unique ptr and move to transfer own ship into this list
 }
 
-void Drawable::AddIndexBuffer(std::unique_ptr<IndexBuffer> ibuf) noxnd
-{
-	assert("Attempting to add index buffer a second time" && pIndexBuffer == nullptr);
-	//the same as above and we only use this to bind the indexBuffer so we can get the ptr of the indexbuffer in memory
-	pIndexBuffer = ibuf.get();
-	binds.push_back(std::move(ibuf));
-}
+

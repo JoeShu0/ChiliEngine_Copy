@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+#include "Vertex.h"
 #include "IndexedTriangleList.h"
 #include <DirectXMath.h>
 #include <initializer_list>
@@ -6,14 +8,31 @@
 class Cube
 {
 public:
-	template<class V>
-	static IndexedTriangleList<V> Make(bool inside = false)
+	static IndexedTriangleList Make(bool inside = false, std::optional<Dvtx::VertexLayout> layout = std::nullopt)
 	{
 		namespace dx = DirectX;
 
 		constexpr float side = 1.0f / 2.0f;
 
-		std::vector<V> vertices(8);
+
+		using Element = Dvtx::VertexLayout::ElementType;
+		if (!layout)
+		{
+			layout = Dvtx::VertexLayout{}.Append(Element::Position3D);
+		}
+
+		Dvtx::VertexBuffer vb{ std::move(layout.value()) };
+		
+		vb.EmplaceBack(dx::XMFLOAT3(-side, -side, -side));
+		vb.EmplaceBack(dx::XMFLOAT3(side, -side, -side));
+		vb.EmplaceBack(dx::XMFLOAT3(-side, side, -side));
+		vb.EmplaceBack(dx::XMFLOAT3(side, side, -side));
+		vb.EmplaceBack(dx::XMFLOAT3(-side, -side, side));
+		vb.EmplaceBack(dx::XMFLOAT3(side, -side, side));
+		vb.EmplaceBack(dx::XMFLOAT3(-side, side, side));
+		vb.EmplaceBack(dx::XMFLOAT3(side, side, side));
+
+		/*
 		vertices[0].pos = { -side,-side,-side };
 		vertices[1].pos = { side,-side,-side };
 		vertices[2].pos = { -side,side,-side };
@@ -22,10 +41,10 @@ public:
 		vertices[5].pos = { side,-side,side };
 		vertices[6].pos = { -side,side,side };
 		vertices[7].pos = { side,side,side };
-		
+		*/
 		if (inside)
 			return{
-			std::move(vertices),{
+			std::move(vb),{
 				0,1,2, 2,1,3,
 				1,5,3, 3,5,7,
 				2,3,6, 3,7,6,
@@ -36,7 +55,7 @@ public:
 			};
 		else
 			return{
-			std::move(vertices),{
+			std::move(vb),{
 				0,2,1, 2,3,1,
 				1,3,5, 3,7,5,
 				2,6,3, 3,6,7,
@@ -46,7 +65,7 @@ public:
 				}
 			};
 	}
-
+	/*
 	template<class V>
 	static IndexedTriangleList<V> MakeSkinned()
 	{
@@ -169,5 +188,5 @@ public:
 		itl.vertices[23].tc = { 1.0f,1.0f };
 
 		return itl;
-	}
+	}*/
 };

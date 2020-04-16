@@ -94,7 +94,7 @@ void App::DoFrame()
 	for (auto& d : drawables)
 	{
 		//d->Update(dt);
-		d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt * speed_factor);
+		//d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt * speed_factor);
 		d->Draw(wnd.Gfx());
 	}
 
