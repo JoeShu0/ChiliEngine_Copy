@@ -18,7 +18,7 @@ SkyBox::SkyBox(Graphics & gfx, DirectX::XMFLOAT3 pos, float size)
 
 	AddBind(std::make_shared<VertexBuffer>(gfx, model.vertices));
 
-	auto pvs = std::make_shared<VertexShader>(gfx, std::wstring(L"SkyBoxVS.cso"));
+	auto pvs = std::make_shared<VertexShader>(gfx, std::string("SkyBoxVS.cso"));
 	auto pvsbc = pvs->GetBytecode();//get ptr to the Blob since the Vertexshader will be deleted
 	AddBind(std::move(pvs));
 

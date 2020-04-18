@@ -11,6 +11,11 @@ namespace Bind
 	{
 	public:
 		virtual void Bind(Graphics& gfx) noexcept = 0;
+		virtual std::string GetUID() const noexcept
+		{
+			assert(false);
+			return "";
+		}
 		virtual ~Bindable() = default; //polymophism need implement custom Dtor??
 	protected:
 		// Since all creating and binding DX resources need interface to Context and Device(private to the Graohics)
