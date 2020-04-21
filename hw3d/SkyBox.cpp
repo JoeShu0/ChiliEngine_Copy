@@ -22,14 +22,15 @@ SkyBox::SkyBox(Graphics & gfx, DirectX::XMFLOAT3 pos, float size)
 	auto pvsbc = pvs->GetBytecode();//get ptr to the Blob since the Vertexshader will be deleted
 	AddBind(std::move(pvs));
 
-	AddBind(std::make_shared<Texture>(gfx, Surface::FromFile("Images\\EnvMap.png")));
+	AddBind(std::make_shared<Texture>(gfx,std::string("Images\\EnvMap.png")));
+
 	AddBind(std::make_shared<Sampler>(gfx));
 
-	AddBind(std::make_shared<PixelShader>(gfx, std::wstring(L"SkyBoxPS.cso")));
+	AddBind(std::make_shared<PixelShader>(gfx, std::string("SkyBoxPS.cso")));
 
 	AddBind(std::make_shared<IndexBuffer>(gfx, model.indices));
 
-	AddBind(std::make_shared<InputLayout>(gfx, model.vertices.GetLayout().GetD3DLayout(), pvsbc));
+	AddBind(std::make_shared<InputLayout>(gfx, model.vertices.GetLayout(), pvsbc));
 
 	AddBind(std::make_shared<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	

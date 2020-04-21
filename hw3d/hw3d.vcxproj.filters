@@ -302,9 +302,6 @@
     <ClInclude Include="Color.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BindableCommon.h">
-      <Filter>头文件\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="BindableCodex.h">
       <Filter>头文件</Filter>
     </ClInclude>

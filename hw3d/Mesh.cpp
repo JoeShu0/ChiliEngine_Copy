@@ -296,11 +296,11 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		auto &material = *pMaterials[mesh.mMaterialIndex];
 		aiString texFileName;//Assimp special string object
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
-		bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, Surface::FromFile(base + texFileName.C_Str())));
+		bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str()));
 		//Check if the Specular Texture  exist
 		if(material.GetTexture(aiTextureType_SPECULAR, 0, &texFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, Surface::FromFile(base + texFileName.C_Str()), 1));
+			bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str(), 1));
 			hasSpecular = true;
 		}
 		else
@@ -319,11 +319,11 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	bindablePtrs.push_back(std::move(pvs));
 	if (hasSpecular)
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::wstring(L"PhongPSSpecular.cso")));
+		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::string("PhongPSSpecular.cso")));
 	}
 	else
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::wstring(L"PhongPS.cso")));
+		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::string("PhongPS.cso")));
 		
 		struct PSMaterialConstant
 		{
@@ -337,7 +337,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	}
 	
 
-	bindablePtrs.push_back(std::make_shared<Bind::InputLayout>(gfx, vbuf.GetLayout().GetD3DLayout(), pvsbc));
+	bindablePtrs.push_back(std::make_shared<Bind::InputLayout>(gfx, vbuf.GetLayout(), pvsbc));
 
 	
 
