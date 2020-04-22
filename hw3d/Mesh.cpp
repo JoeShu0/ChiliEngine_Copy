@@ -34,7 +34,7 @@ const std::string& ModelException::GetNote() const noexcept
 Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>> bindPtrs)
 {
 
-	AddBind(std::make_shared<Bind::Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddBind(Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	for (auto& pb : bindPtrs)
 	{
@@ -248,6 +248,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 {
 	namespace dx = DirectX;
 	using Dvtx::VertexLayout;
+	using namespace Bind;
 
 	Dvtx::VertexBuffer vbuf(std::move(
 		VertexLayout{}
@@ -282,7 +283,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		indices.push_back(face.mIndices[2]);
 	}
 
-	std::vector<std::shared_ptr<Bind::Bindable>> bindablePtrs;
+	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
+	using namespace std::string_literals;
+	const auto base = "Models\\nano_textured\\"s;
 
 	bool hasSpecular = false;
 	float shininess = 35.0f;
@@ -290,40 +293,44 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	//if a imported mesh have multiple material, it will be splited
 	if (mesh.mMaterialIndex >= 0)//if a mesh don't have a material, index will be negtive
 	{
-		using namespace std::string_literals;
-		const auto base = "Models\\nano_textured\\"s;
 
 		auto &material = *pMaterials[mesh.mMaterialIndex];
 		aiString texFileName;//Assimp special string object
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
-		bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str()));
+		bindablePtrs.push_back(Texture::Resolve(gfx, base + texFileName.C_Str()));
 		//Check if the Specular Texture  exist
 		if(material.GetTexture(aiTextureType_SPECULAR, 0, &texFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str(), 1));
+			bindablePtrs.push_back(Texture::Resolve(gfx, base + texFileName.C_Str(), 1));
 			hasSpecular = true;
 		}
 		else
 		{
 			material.Get(AI_MATKEY_SHININESS, shininess); // get shiniess value
 		}
-		bindablePtrs.push_back(std::make_shared<Bind::Sampler>(gfx));
+		bindablePtrs.push_back(Sampler::Resolve(gfx));
 	}
 
-	bindablePtrs.push_back(std::make_shared<Bind::VertexBuffer>(gfx, vbuf));
+	auto meshTag = base + "%" + mesh.mName.C_Str();
+	bindablePtrs.push_back(VertexBuffer::Resolve(gfx, meshTag, vbuf));
 
-	bindablePtrs.push_back(std::make_shared<Bind::IndexBuffer>(gfx, indices));
+	bindablePtrs.push_back(IndexBuffer::Resolve(gfx, meshTag, indices));
 
-	auto pvs = std::make_shared<Bind::VertexShader>(gfx, std::string("PhongVS.cso"));
+	auto pvs = VertexShader::Resolve(gfx, std::string("PhongVS.cso"));
 	auto pvsbc = pvs->GetBytecode();
+	//auto pvsbc =dynamic_cast<VertexShader*>(pvs.get())->GetBytecode();
+	//auto pvsbc = static_cast<VertexShader&>(*pvs).GetBytecode(); // both ways to get the cast and byte code
 	bindablePtrs.push_back(std::move(pvs));
+
+	bindablePtrs.push_back(InputLayout::Resolve(gfx, vbuf.GetLayout(), pvsbc));
+
 	if (hasSpecular)
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::string("PhongPSSpecular.cso")));
+		bindablePtrs.push_back(PixelShader::Resolve(gfx, std::string("PhongPSSpecular.cso")));
 	}
 	else
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, std::string("PhongPS.cso")));
+		bindablePtrs.push_back(PixelShader::Resolve(gfx, std::string("PhongPS.cso")));
 		
 		struct PSMaterialConstant
 		{
@@ -333,13 +340,10 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 			float padding[2];
 		} pmc;
 		pmc.specularPower = shininess;
-		bindablePtrs.push_back(std::make_shared<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
+		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
+		//currently all material will share the same pixelconstant
 	}
-	
 
-	bindablePtrs.push_back(std::make_shared<Bind::InputLayout>(gfx, vbuf.GetLayout(), pvsbc));
-
-	
 
 	return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
 }

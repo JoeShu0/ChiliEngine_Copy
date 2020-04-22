@@ -13,9 +13,9 @@ namespace Bind
 	private:
 		struct Transforms
 		{
-			DirectX::XMMATRIX Model;
-			DirectX::XMMATRIX ModelView;
-			DirectX::XMMATRIX ModelViewProj;
+			DirectX::XMMATRIX Model; // model local to world
+			DirectX::XMMATRIX ModelView; // model local to view local
+			DirectX::XMMATRIX ModelViewProj; // model local to screen
 		};
 	public:
 		TransformCbuf(Graphics& gfx, const Drawable& parent, UINT slot = 0u);

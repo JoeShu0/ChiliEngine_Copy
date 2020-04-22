@@ -12,7 +12,7 @@ SkyBox::SkyBox(Graphics & gfx, DirectX::XMFLOAT3 pos, float size)
 {
 	namespace dx = DirectX;
 
-
+	//skybox is always unique! so we will not use shared Bindable codex for skybox bindables
 
 	auto model = Cube::Make(true);
 

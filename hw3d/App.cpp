@@ -31,13 +31,6 @@ App::App()
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
 
 
-	//auto a = Bind::VertexShader::Resolve(wnd.Gfx(), "PhongVS.cso");
-	//auto b = Bind::VertexShader::Resolve(wnd.Gfx(), "PhongVS.cso");
-	//auto b = Bind::Sampler::Resolve(wnd.Gfx());
-	//auto c = Bind::Sampler::Resolve(wnd.Gfx());
-	//auto b = Bind::Sampler::Resolve(wnd.Gfx());
-	//auto b = Bind::Sampler::Resolve(wnd.Gfx());
-	//wnd.DisableCursor();
 }
 
 int App::Go()
@@ -109,6 +102,7 @@ void App::DoFrame()
 
 
 	nano.Draw(wnd.Gfx());
+	nano2.Draw(wnd.Gfx());
 	//draw light mesh
 	light.Draw(wnd.Gfx());
 
@@ -171,6 +165,7 @@ void App::DoFrame()
 	//SpawnBoxWindows();
 	ShowImguiDemoWindow();
 	nano.ShowWindow();
+	nano2.ShowWindow();
 	//ShowRawInputWindow();
 	
 	//Flush keyEvent buffer 
