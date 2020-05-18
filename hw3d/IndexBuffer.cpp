@@ -6,7 +6,7 @@ namespace Bind
 {
 	IndexBuffer::IndexBuffer(Graphics & gfx, const std::vector<unsigned short>& indices)
 		:
-		IndexBuffer(gfx, "?", indices)
+		IndexBuffer(gfx, "?", indices)//this means will not construct a IndexBuffer inside codex
 	{}
 	
 	IndexBuffer::IndexBuffer(Graphics & gfx, std::string tag, const std::vector<unsigned short>& indices)
@@ -39,7 +39,7 @@ namespace Bind
 	}
 	std::shared_ptr<IndexBuffer> IndexBuffer::Resolve(Graphics & gfx, const std::string & tag, const std::vector<unsigned short>& indices)
 	{
-		assert(tag != "?"); // cant resolve with "?" as tag
+		assert(tag != "?"); // cant resolve with "?" as tag, use ? tag means you don't want the 
 		return Codex::Resolve<IndexBuffer>(gfx, tag, indices);
 	}
 	std::string IndexBuffer::GetUID() const noexcept

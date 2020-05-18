@@ -27,9 +27,11 @@ namespace Bind
 			//since in order to generate UID, we need all the Ctor params
 			//We will get all the params in Resolve() and forward to GenerrateUID
 			const auto key = T::GenerateUID(std::forward < Params>(p)...);
+			//search for the UID to share.
 			const auto i = binds.find(key);
 			if (i == binds.end())
 			{
+				//newly create a shared_ptr to bindable, also forward all the params needed for Ctor 
 				auto bind = std::make_shared<T>(gfx, std::forward<Params>(p)...);
 				binds[key] = bind;
 				return bind;
@@ -37,6 +39,7 @@ namespace Bind
 			else
 			{
 				return std::static_pointer_cast<T>(i->second);
+				//since we are casting shared_ptr to a base class to derived class, we have to use a special function std::static_pointer_cast
 				//return dynamic_cast<T*>(i->second.get()); //will this work??
 			}
 		}
