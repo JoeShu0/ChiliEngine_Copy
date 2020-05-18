@@ -40,12 +40,6 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{b7bc50f9-887b-4e07-bfa0-e2756bcb3e24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Drawable\TestObjects">
-      <UniqueIdentifier>{77418839-f0f0-4ad3-a204-cd89931c70d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Drawable\TestObject">
-      <UniqueIdentifier>{74938f02-09c1-475d-85a2-25bca9948836}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -160,6 +154,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
+      <Filter>源文件\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
       <Filter>源文件\Drawable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -304,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="BindableCodex.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>头文件\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>头文件\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
