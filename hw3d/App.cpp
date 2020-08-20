@@ -22,7 +22,8 @@ App::App()
 	:
 	wnd(1280,720, "D3D11 Engine Window"),
 	light(wnd.Gfx()),
-	cam(wnd.Gfx(), dx::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40000.0f))
+	cam(wnd.Gfx(), dx::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40000.0f)),
+	plane(wnd.Gfx(), 3.0f)
 {
 
 	drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
@@ -30,7 +31,7 @@ App::App()
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
 
-
+	plane.SetPos({ 1.0f, 17.0f, -1.0f });
 }
 
 int App::Go()
@@ -105,6 +106,7 @@ void App::DoFrame()
 	nano2.Draw(wnd.Gfx());
 	//draw light mesh
 	light.Draw(wnd.Gfx());
+	plane.Draw(wnd.Gfx());
 
 
 	/*
