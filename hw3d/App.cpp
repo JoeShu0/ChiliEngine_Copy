@@ -166,9 +166,9 @@ void App::DoFrame()
 	//SpawnBoxWindowManagerWindow();
 	//SpawnBoxWindows();
 	ShowImguiDemoWindow();
-	nano.ShowWindow();
-	nano2.ShowWindow();
-	//ShowRawInputWindow();
+	nano.ShowWindow("model 1");
+	nano2.ShowWindow("model 2");
+	plane.SpawnControlWindow(wnd.Gfx());
 	
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();
