@@ -17,6 +17,13 @@ cbuffer ObjectCBuf
     float padding[2];
 };
 
+cbuffer TransformBuffer
+{
+    matrix model;// model local to world
+    matrix modelView; // model local to view local
+    matrix modelViewProj; // model local to screen
+};
+
 Texture2D tex;
 Texture2D nmap;
 SamplerState splr;
@@ -39,6 +46,7 @@ float4 main(float4 pos : SV_Position,
         worldnormal.x = SampledNormal.x * 2.0f - 1.0f;
         worldnormal.y = -(SampledNormal.y * 2.0f - 1.0f);
         worldnormal.z = -(SampledNormal.z * 2.0f - 1.0f);
+        worldnormal = mul(worldnormal, (float3x3)model);
     }
 
     // fragment to light vector data
@@ -57,5 +65,6 @@ float4 main(float4 pos : SV_Position,
     const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, worldnormal));
     // final color
     //return float4(saturate(specular) * materialColor, 1.0f);
+    //return float4(specular, 1.0f);
     return float4(saturate(diffuse + ambient) * tex.Sample(splr, tc).rgb + specular, 1.0f);
 }

@@ -7,7 +7,7 @@ namespace dx = DirectX;
 Camera::Camera(Graphics & gfx, DirectX::XMMATRIX Proj)
 	:
 	ProjectionMAT(Proj),
-	cbuf(gfx, 2)
+	cbuf(gfx, 3)//Set the cameraCbuf to be bind to slot3!!! as the slot is shared, caution when adding slot to otherbindings!!
 {
 	Reset();
 }

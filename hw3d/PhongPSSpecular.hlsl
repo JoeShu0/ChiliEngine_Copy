@@ -14,7 +14,7 @@ Texture2D tex;
 Texture2D spec;
 SamplerState splr;
 
-cbuffer CameraCBuf
+cbuffer CameraCBuf:register(b3)
 {
     float3 CameraWPos;
 };
