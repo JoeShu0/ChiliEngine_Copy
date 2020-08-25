@@ -25,10 +25,10 @@ cbuffer TransformBuffer
 };
 
 Texture2D tex;
-Texture2D nmap;
+Texture2D nmap : register(t2);
 SamplerState splr;
 
-cbuffer CameraCBuf
+cbuffer CameraCBuf: register(b3)
 {
     float3 CameraWPos;
 };
@@ -38,15 +38,23 @@ float4 main(float4 pos : SV_Position,
     float3 worldnormal : WNormal,
     float3 viewPos : VPosition,
     float3 viewnormal : VNormal,
-    float2 tc : Texcoord) : SV_Target
+    float2 tc : Texcoord,
+    float3 worldtangent : WTangent,
+    float3 worldbitangent : WBiTangent) : SV_Target
 {
     if (normalMapEnabled)
     {
+        const float3x3 TransformToWorld = float3x3(
+            normalize(worldtangent),
+            normalize(worldbitangent),
+            normalize(worldnormal));
+
         const float3 SampledNormal = nmap.Sample(splr, tc).xyz;
         worldnormal.x = SampledNormal.x * 2.0f - 1.0f;
-        worldnormal.y = -(SampledNormal.y * 2.0f - 1.0f);
-        worldnormal.z = -(SampledNormal.z * 2.0f - 1.0f);
-        worldnormal = mul(worldnormal, (float3x3)model);
+        worldnormal.y = (SampledNormal.y * 2.0f - 1.0f);
+        worldnormal.z = (SampledNormal.z * 2.0f - 1.0f);
+
+        worldnormal = mul(worldnormal, TransformToWorld);
     }
 
     // fragment to light vector data

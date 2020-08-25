@@ -17,9 +17,6 @@ namespace Bind
 
 	void TransformCbuf::Bind(Graphics & gfx) noexcept
 	{
-		/*
-		
-		*/
 		UpdateBindImpl(gfx, GetTransforms(gfx));
 	}
 	void TransformCbuf::UpdateBindImpl(Graphics& gfx, const Transforms& tf) noexcept
