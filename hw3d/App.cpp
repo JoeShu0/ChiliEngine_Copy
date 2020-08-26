@@ -103,7 +103,8 @@ void App::DoFrame()
 	//nano.Draw(wnd.Gfx());
 	//nano2.Draw(wnd.Gfx());
 	//draw light mesh
-	wall.Draw(wnd.Gfx());
+	//wall.Draw(wnd.Gfx());
+	gobber.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
@@ -168,7 +169,8 @@ void App::DoFrame()
 	//nano.ShowWindow("model 1");
 	//nano2.ShowWindow("model 2");
 	//plane.SpawnControlWindow(wnd.Gfx());
-	wall.ShowWindow("Wall");
+	//wall.ShowWindow("Wall");
+	gobber.ShowWindow("gobber");
 	
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();
