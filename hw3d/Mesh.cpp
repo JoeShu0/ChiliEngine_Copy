@@ -348,9 +348,11 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		struct PSMaterialConstantFullmonte
 		{
 			BOOL normalMapEnabled = true;
+			BOOL specularMapEnabled = true;
 			BOOL hasGlossMap;
 			float specularPowner;
-			float padding[1];
+			dx::XMFLOAT3 specularColor = { 1.0f,1.0f,1.0f };
+			float specularmapWeight = 1.0f;
 		}pmc;
 		pmc.specularPowner = shininess;
 		pmc.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
