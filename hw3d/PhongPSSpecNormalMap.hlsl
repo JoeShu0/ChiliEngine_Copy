@@ -12,7 +12,9 @@ cbuffer LightCBuf
 cbuffer ObjectCBuf
 {
     bool normalMapEnabled;
-    float padding[3];
+    bool hasGloss;
+    float specularPowerConst;
+    float padding[1];
 };
 
 Texture2D tex;
@@ -62,8 +64,16 @@ float4 main(float4 pos : SV_Position,
     // cal the specular 
     const float4 specularSample = spec.Sample(splr, tc);
     const float3 specularColor = specularSample.rgb;
-    const float spacularPower = pow(2.0f, specularSample.a * 13.0f);
-    const float3 specular = att * (diffuseColor * diffuseIntensity) * pow(max(0.0f, dot(normalize(r), normalize(CameraWPos - worldPos))), spacularPower);
+    float specularPower;
+    if (hasGloss)
+    {
+        specularPower = pow(2.0f, specularSample.a * 13.0f);
+    }
+    else
+    {
+        specularPower = specularPowerConst;
+    }
+    const float3 specular = att * (diffuseColor * diffuseIntensity) * pow(max(0.0f, dot(normalize(r), normalize(CameraWPos - worldPos))), specularPower);
 	// diffuse intensity
     const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, worldnormal));
 	// final color

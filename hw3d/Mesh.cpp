@@ -257,6 +257,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	const auto base = "Models\\gobber\\"s;
 
 	bool hasSpecularMap = false;
+	bool hasAlphaGloss = false;
 	bool hasNormalMap = false;
 	bool hasDiffuseMap = false;
 	float shininess = 35.0f;
@@ -276,15 +277,23 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		}
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(Texture::Resolve(gfx, base + textFileName.C_Str(), 1u));
+			//bindablePtrs.push_back(Texture::Resolve(gfx, base + textFileName.C_Str(), 1u));
+			auto tex = Texture::Resolve(gfx, base + textFileName.C_Str(), 1u);
+			hasAlphaGloss = tex->HasAlpha();
+			bindablePtrs.push_back(std::move(tex));
 			hasSpecularMap = true;
 		}
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(Texture::Resolve(gfx, base + textFileName.C_Str(), 2u));
+			auto tex = Texture::Resolve(gfx, base + textFileName.C_Str(), 2u);
+			//hasAlphaGloss = tex->HasAlpha();
+			bindablePtrs.push_back(std::move(tex));
 			hasNormalMap = true;
 		}
-
+		if (!hasAlphaGloss)
+		{
+			material.Get(AI_MATKEY_SHININESS, shininess);
+		}
 		if (hasDiffuseMap || hasSpecularMap || hasNormalMap)
 		{
 			bindablePtrs.push_back(Bind::Sampler::Resolve(gfx));
@@ -339,8 +348,12 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		struct PSMaterialConstantFullmonte
 		{
 			BOOL normalMapEnabled = true;
-			float padding[3];
+			BOOL hasGlossMap;
+			float specularPowner;
+			float padding[1];
 		}pmc;
+		pmc.specularPowner = shininess;
+		pmc.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
 		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstantFullmonte>::Resolve(gfx, pmc, 1u));
 	}
 	else if(hasDiffuseMap && hasNormalMap)
@@ -491,7 +504,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 		struct PSMaterialConstantNotex
 		{
-			dx::XMFLOAT4 materialColor = { 0.65f,0.65f,0.85f,1.0f };
+			dx::XMFLOAT4 materialColor = { 0.45f,0.45f,0.85f,1.0f };
 			float specularIntensity = 0.18f;
 			float specularPower;
 			float padding[2];
