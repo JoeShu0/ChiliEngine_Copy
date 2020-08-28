@@ -50,7 +50,7 @@ float4 main(float4 pos : SV_Position,
         worldnormal.y = (SampledNormal.y * 2.0f - 1.0f);
         worldnormal.z = (SampledNormal.z * 2.0f - 1.0f);
 
-        worldnormal = mul(worldnormal, TransformToWorld);
+        worldnormal = normalize(mul(worldnormal, TransformToWorld));
     }
     
 	// fragment to light vector data

@@ -24,14 +24,18 @@ cbuffer CameraCBuf
     float3 CameraWPos;
 };
 
-float4 main(float4 pos : SV_Position, 
-            float3 worldPos : WPosition, 
-            float3 worldnormal : WNormal,
-            float3 viewPos : VPosition,
-            float3 viewnormal : VNormal,
-			float2 tc : Texcoord) : SV_Target
+float4 main(float4 pos : SV_Position,
+        float3 worldPos : WPosition,
+        float3 worldnormal : WNormal,
+        float3 viewPos : VPosition,
+        float3 viewnormal : VNormal,
+        float2 tc : Texcoord) : SV_Target
 {
-	// fragment to light vector data
+    //Normalize normal
+    worldnormal = normalize(worldnormal);
+    viewnormal = normalize(viewnormal);
+
+    // fragment to light vector data
 	const float3 vToL = lightPos - worldPos;
 	const float distToL = length(vToL);
 	const float3 dirToL = vToL / distToL;

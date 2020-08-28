@@ -519,7 +519,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 		Node::PSMaterialConstantNotex pmc;
 		pmc.specularPower = shininess;
-		pmc.specularIntensity = (specularColor.x + specularColor.y + specularColor.z) / 3.0f;
+		pmc.specularColor = specularColor;
 		pmc.materialColor = diffuseColor;
 		bindablePtrs.push_back(PixelConstantBuffer<Node::PSMaterialConstantNotex>::Resolve(gfx, pmc, 1u));
 	}
