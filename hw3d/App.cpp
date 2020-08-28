@@ -170,7 +170,7 @@ void App::DoFrame()
 	//nano2.ShowWindow("model 2");
 	//plane.SpawnControlWindow(wnd.Gfx());
 	//wall.ShowWindow("Wall");
-	gobber.ShowWindow("gobber");
+	gobber.ShowWindow(wnd.Gfx(), "gobber");
 	
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();

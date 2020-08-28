@@ -21,7 +21,7 @@ public:
 	void Draw(Graphics& gfx) const noxnd;
 	
 	virtual ~Drawable() = default;
-protected:
+
 	template<class T>
 	T* QueryBindable() noexcept
 	{
@@ -34,6 +34,7 @@ protected:
 		}
 		return nullptr;
 	}
+protected:
 	void AddBind(std::shared_ptr<Bind::Bindable> bind) noxnd;
 	//void AddIndexBuffer(std::unique_ptr<Bind::IndexBuffer> ibuf) noxnd;
 //private:
