@@ -9,6 +9,7 @@
 #include <optional>
 #include "ConstantBuffers.h"
 #include <type_traits>
+#include <filesystem>
 #include "imgui/imgui.h"
 
 class ModelException : public CustomException
@@ -56,7 +57,7 @@ public:
 	//when construct every node, it will be named for indentification
 	Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
-	void SetAppliedtransform(DirectX::FXMMATRIX transform) noexcept;
+	void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
 	//handle the details for the tree Gui show up, it is recursive calling, so you only have to call it for the root node.
 	//Pass in the incremental index, the optional index for the selected node, and a ref to ptr to the selected node
 	void ShowTree(Node*& pSelectedNode) const noexcept;
@@ -129,15 +130,16 @@ private:
 class Model
 {
 public:
-	Model(Graphics& gfx, const std::string fileName);
+	Model(Graphics& gfx, const std::string& pathString, float scale = 1.0f);
 	void Draw(Graphics& gfx) const noxnd;
 	void ShowWindow(Graphics& gfx, const char* WindowName = nullptr) noexcept;
+	void SetRootTransform(DirectX::FXMMATRIX tf) noexcept;
 	~Model() noexcept;
 private:
 	//we want to pass in the GFX, const reference to aiMesh and a array of aiMaterial for that mesh
 	//mateials should be aiMaterial** is aptr to an array of ptrs(PP), Since the Ptr to array and the array of ptr to aiMaterial are all in assimp, it should be all const
 	//So we are passing the mareial ptr loaded to this func as a const ptr to an array of const ptrs to aiMaterials!!!!!! 
-	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial *const *pMaterials);
+	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial *const *pMaterials, const std::filesystem::path& path, float scale);
 	std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node);
 private:
 	std::unique_ptr<Node> pRoot;//this model class only keep track of root node

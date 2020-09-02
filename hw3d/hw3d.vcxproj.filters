@@ -317,6 +317,12 @@
     <ClInclude Include="TransformCbufDouble.h">
       <Filter>头文件\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="LightVectorData.hlsl">
+      <Filter>Shaders\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.hlsl">
+      <Filter>Shaders\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hw3d.rc">

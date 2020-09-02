@@ -1,13 +1,6 @@
-cbuffer LightCBuf
-{
-    float3 lightPos;
-    float3 ambient;
-    float3 diffuseColor;
-    float diffuseIntensity;
-    float attConst;
-    float attLin;
-    float attQuad;
-};
+#include "ShaderOps.hlsl"
+#include "LightVectorData.hlsl"
+#include "PointLight.hlsl"
 
 cbuffer ObjectCBuf
 {
@@ -17,12 +10,7 @@ cbuffer ObjectCBuf
     float padding[2];
 };
 
-cbuffer TransformBuffer
-{
-    matrix model;// model local to world
-    matrix modelView; // model local to view local
-    matrix modelViewProj; // model local to screen
-};
+#include "transform.hlsl"
 
 Texture2D tex;
 Texture2D nmap : register(t2);
@@ -49,19 +37,21 @@ float4 main(float4 pos : SV_Position,
             normalize(worldbitangent),
             normalize(worldnormal));
 
-        const float3 SampledNormal = nmap.Sample(splr, tc).xyz;
-        worldnormal.x = SampledNormal.x * 2.0f - 1.0f;
-        worldnormal.y = (SampledNormal.y * 2.0f - 1.0f);
-        worldnormal.z = (SampledNormal.z * 2.0f - 1.0f);
+        const float3 SampledNormal = nmap.Sample(splr, tc).xyz * 2.0f - 1.0f;
 
-        worldnormal = normalize(mul(worldnormal, TransformToWorld));
+        worldnormal = NormalMapWorldSpace(worldtangent, worldbitangent, worldnormal, tc, nmap, splr);
     }
 
     // fragment to light vector data
-    const float3 vToL = lightPos - worldPos;
-    const float distToL = length(vToL);
-    const float3 dirToL = vToL / distToL;
+    const LightVectorData lv = CalculateLightVectorData(lightPos, worldPos);
+    
+    const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
 
+    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, worldnormal);
+
+    const float3 specular = Speculate(specularIntensity.rrr, 1.0f, worldnormal, lv.dirToL, worldPos, CameraWPos, att, specularPower);
+
+    /*
     // diffuse attenuation
     const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL));
     //relected light vector
@@ -74,5 +64,6 @@ float4 main(float4 pos : SV_Position,
     // final color
     //return float4(saturate(specular) * materialColor, 1.0f);
     //return float4(specular, 1.0f);
+    */
     return float4(saturate(diffuse + ambient) * tex.Sample(splr, tc).rgb + specular, 1.0f);
 }

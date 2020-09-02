@@ -3,6 +3,7 @@
 #include "Surface.h"
 #include <unordered_map>
 #include <sstream>
+#include <filesystem>
 
 namespace dx = DirectX;
 
@@ -121,7 +122,7 @@ void Node::ShowTree( Node*& pSelectedNode) const noexcept
 	}
 }
 
-void Node::SetAppliedtransform(DirectX::FXMMATRIX transform)noexcept
+void Node::SetAppliedTransform(DirectX::FXMMATRIX transform)noexcept
 {
 	dx::XMStoreFloat4x4(&appliedTransform, transform);
 }
@@ -206,12 +207,12 @@ private:
 	std::unordered_map<int, TransformParameters> transforms;
 };
 // Model
-Model::Model(Graphics& gfx, const std::string fileName)
+Model::Model(Graphics& gfx, const std::string& pathString, const float scale)
 	:
 	pWindow(std::make_unique<ModelWindow>())
 {
 	Assimp::Importer imp;
-	const auto pScene = imp.ReadFile(fileName.c_str(),
+	const auto pScene = imp.ReadFile(pathString.c_str(),
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_ConvertToLeftHanded |
@@ -226,7 +227,7 @@ Model::Model(Graphics& gfx, const std::string fileName)
 
 	for (size_t i = 0; i < pScene->mNumMeshes; i++)
 	{
-		meshPtrs.push_back(ParseMesh(gfx, *pScene->mMeshes[i], pScene->mMaterials));
+		meshPtrs.push_back(ParseMesh(gfx, *pScene->mMeshes[i], pScene->mMaterials, pathString, scale));
 	}
 
 	int nextId = 0;
@@ -237,7 +238,7 @@ void Model::Draw(Graphics& gfx) const noxnd
 	//get the edited value from GUI and apply to specific node
 	if (auto node = pWindow->GetSelectedNode())
 	{
-		node->SetAppliedtransform( pWindow->GetTransform() );
+		node->SetAppliedTransform( pWindow->GetTransform() );
 	}
 	//pRoot->Draw(gfx, pWindow->GetTransform());//recursion call to draw all mesh
 	pRoot->Draw(gfx, dx::XMMatrixIdentity());
@@ -248,6 +249,11 @@ void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept
 	pWindow->Show(gfx, windowName, *pRoot);
 }
 
+void Model::SetRootTransform(DirectX::FXMMATRIX tf) noexcept
+{
+	pRoot->SetAppliedTransform(tf);
+}
+
 Model::~Model() noexcept
 {
 }
@@ -255,16 +261,16 @@ Model::~Model() noexcept
 //a forward decalcare a for class ModelWindow
 
 
-std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial *const *pMaterials)
+std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial *const *pMaterials, const std::filesystem::path& path, float scale)
 {
 	namespace dx = DirectX;
 	using namespace std::string_literals;
 	using Dvtx::VertexLayout;
 	using namespace Bind;
 
+	//const auto base = "Models\\gobber\\"s;
+	const auto rootPath = path.parent_path().string() + "\\";
 	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
-
-	const auto base = "Models\\gobber\\"s;
 
 	bool hasSpecularMap = false;
 	bool hasAlphaGloss = false;
@@ -284,7 +290,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		// check for what maps do this material have.
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(Texture::Resolve(gfx, base + textFileName.C_Str()));
+			bindablePtrs.push_back(Texture::Resolve(gfx, rootPath + textFileName.C_Str()));
 			hasDiffuseMap = true;
 		}
 		else 
@@ -294,14 +300,14 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textFileName) == aiReturn_SUCCESS)
 		{
 			//bindablePtrs.push_back(Texture::Resolve(gfx, base + textFileName.C_Str(), 1u));
-			auto tex = Texture::Resolve(gfx, base + textFileName.C_Str(), 1u);
+			auto tex = Texture::Resolve(gfx, rootPath + textFileName.C_Str(), 1u);
 			hasAlphaGloss = tex->HasAlpha();
 			bindablePtrs.push_back(std::move(tex));
 			hasSpecularMap = true;
 		}
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textFileName) == aiReturn_SUCCESS)
 		{
-			auto tex = Texture::Resolve(gfx, base + textFileName.C_Str(), 2u);
+			auto tex = Texture::Resolve(gfx, rootPath + textFileName.C_Str(), 2u);
 			//hasAlphaGloss = tex->HasAlpha();
 			bindablePtrs.push_back(std::move(tex));
 			hasNormalMap = true;
@@ -320,8 +326,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		}
 	}
 
-	auto meshTag = base + "%" + mesh.mName.C_Str();
-	const float scale = 6.0f;
+	const auto meshTag = rootPath + "%" + mesh.mName.C_Str();
+	//const float scale = 6.0f;
 
 	if (hasDiffuseMap && hasSpecularMap && hasNormalMap)
 	{

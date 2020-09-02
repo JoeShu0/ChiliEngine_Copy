@@ -1,5 +1,6 @@
 #include "ShaderOps.hlsl"
 #include "PointLight.hlsl"
+#include "LightVectorData.hlsl"
 
 cbuffer ObjectCBuf
 {
@@ -40,10 +41,11 @@ float4 main(float4 pos : SV_Position,
         worldnormal = NormalMapWorldSpace(worldtangent, worldbitangent, worldnormal, tc, nmap, splr);
     }
     
+    const LightVectorData lv = CalculateLightVectorData(lightPos, worldPos);
 	// fragment to light vector data
-    const float3 vToL = lightPos - worldPos;
-    const float distToL = length(vToL);
-    const float3 dirToL = vToL / distToL;
+    //const float3 vToL = lightPos - worldPos;
+    //const float distToL = length(vToL);
+    //const float3 dirToL = vToL / distToL;
     
     /*
     // diffuse attenuation
@@ -78,9 +80,9 @@ float4 main(float4 pos : SV_Position,
     //return float4(saturate(specular) * materialColor, 1.0f);
     return float4(saturate(diffuse + ambient) * tex.Sample(splr, tc).rgb + specular * specularRColor, 1.0f);
     */
-    const float att = Attenuate(attConst, attLin, attQuad, distToL);
-    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, dirToL, worldnormal);
+    const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
+    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, worldnormal);
 
-    const float3 specularReflected = Speculate(specularRColor, 1.0f, worldnormal, dirToL, worldPos, CameraWPos, att, specularPower);
+    const float3 specularReflected = Speculate(specularRColor, 1.0f, worldnormal, lv.dirToL, worldPos, CameraWPos, att, specularPower);
     return float4(saturate((diffuse + ambient) * tex.Sample(splr, tc).rgb + specularReflected), 1.0f);
 }

@@ -23,7 +23,7 @@ float3 Diffuse(uniform float3 diffColor, uniform float diffuseIntensity, const i
 
 float3 Speculate(
     const in float3 specularColor,
-    uniform float specularIntensity,
+    uniform float specularIntensity,     
     const in float3 normalWS,
     const in float3 dirToLWS,
     const in float3 posWS,
