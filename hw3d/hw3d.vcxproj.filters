@@ -40,6 +40,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{b7bc50f9-887b-4e07-bfa0-e2756bcb3e24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Common">
+      <UniqueIdentifier>{554c90fd-279b-4c1f-b60a-53bef2dbaf09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -370,6 +373,12 @@
     </FxCompile>
     <FxCompile Include="PhongPSNotex.hlsl">
       <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShaderOps.hlsl">
+      <Filter>Shaders\Common</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLight.hlsl">
+      <Filter>Shaders\Common</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
