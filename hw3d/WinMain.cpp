@@ -16,7 +16,7 @@ int CALLBACK WinMain(
 {
 	try
 	{
-		return App{}.Go(); //{}means this is a temp variable, but since the message will keep looping, it is OK
+		return App{lpCmdLine}.Go(); //{}means this is a temp variable, but since the message will keep looping, it is OK
 		/*
 		Window wnd(800, 300, "Box");
 

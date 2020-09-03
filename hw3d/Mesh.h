@@ -58,6 +58,7 @@ public:
 	Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 	void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
+	const DirectX::XMFLOAT4X4& GetAppliedTransform() const noexcept;
 	//handle the details for the tree Gui show up, it is recursive calling, so you only have to call it for the root node.
 	//Pass in the incremental index, the optional index for the selected node, and a ref to ptr to the selected node
 	void ShowTree(Node*& pSelectedNode) const noexcept;

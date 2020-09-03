@@ -1,15 +1,15 @@
 #include "App.h"
-
-#include "SkyBox.h"
-
 #include <memory>
 #include <algorithm>
 #include "CustomMath.h"
 #include "Surface.h"
 #include "GDIPlusManager.h"
 #include "imgui/imgui.h"
-
 #include "VertexBuffer.h"
+#include "SkyBox.h"
+
+#include "NormalMapTwerker.h"
+#include <shellapi.h>
 
 
 //#include "WindowsMessageMap.h"
@@ -18,18 +18,43 @@ GDIPlusManager gdipm;
 namespace dx = DirectX;
 
 
-App::App()
+App::App( const std::string& commandLine)
 	:
+	commandLine(commandLine),
 	wnd(1280,720, "D3D11 Engine Window"),
 	light(wnd.Gfx()),
 	cam(wnd.Gfx(), dx::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40000.0f))
 {
+	//make shift to CLI to do some preprocessing stuff
+	if (this->commandLine != "")
+	{
+		int nArgs;
+		const auto pLineW = GetCommandLineW();
+		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
+		if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--ntwerk-rotx180")
+		{
+			int nArgs;
+			const auto pLineW = GetCommandLineW();
+			const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
+			if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--ntwerk-rotx180")
+			{
+				const std::wstring pathInWide = pArgs[2];
+				const std::wstring pathOutWide = pArgs[3];
+				NormalMapTwerker::RotateXAxis180(
+					std::string(pathInWide.begin(), pathInWide.end()),
+					std::string(pathOutWide.begin(), pathOutWide.end())
+				);
+				throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
+			}
+		}
+	}
 
 	drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 	//drawables.insert(drawables.begin(),std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
 	wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
+	tp.SetPos({ 12.0f,0.0f,0.0f });
 }
 
 int App::Go()
@@ -106,7 +131,8 @@ void App::DoFrame()
 	wall.Draw(wnd.Gfx());
 	gobber.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
-	//plane.Draw(wnd.Gfx());
+	tp.Draw(wnd.Gfx());
+	
 
 
 	/*
@@ -171,6 +197,7 @@ void App::DoFrame()
 	//plane.SpawnControlWindow(wnd.Gfx());
 	wall.ShowWindow(wnd.Gfx(), "Wall");
 	gobber.ShowWindow(wnd.Gfx(), "gobber");
+	tp.SpawnControlWindow(wnd.Gfx());
 	
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();

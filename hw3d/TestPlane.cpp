@@ -1,8 +1,8 @@
 #include "TestPlane.h"
 #include "Plane.h"
 #include "BindableCommon.h"
-#include "TransformCbufDouble.h"
 #include "imgui/imgui.h"
+#include "TransformCbufDouble.h"
 
 TestPlane::TestPlane(Graphics& gfx, float size)
 {
@@ -16,14 +16,13 @@ TestPlane::TestPlane(Graphics& gfx, float size)
 	AddBind(IndexBuffer::Resolve(gfx, geometryTag, model.indices));
 
 	AddBind(Texture::Resolve(gfx, std::string("Images\\brickwall.jpg")));
-	AddBind(Texture::Resolve(gfx, std::string("Images\\brickwall_normal.jpg"), 1u));
+	AddBind(Texture::Resolve(gfx, std::string("Images\\brickwall_normal_obj.png"), 2u));
 
 	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	AddBind(std::move(pvs));
 
-	//AddBind(PixelShader::Resolve(gfx, "PhongPS.cso"));
-	AddBind(PixelShader::Resolve(gfx, "PhongPSNormalMap.cso"));
+	AddBind(PixelShader::Resolve(gfx, "PhongPSNormalMapObject.cso"));
 
 	AddBind(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 

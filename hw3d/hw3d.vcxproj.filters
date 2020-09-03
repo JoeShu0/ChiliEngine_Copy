@@ -165,6 +165,9 @@
     <ClCompile Include="TransformCbufDouble.cpp">
       <Filter>源文件\Bindable</Filter>
     </ClCompile>
+    <ClCompile Include="CustomXM.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowsMessageMap.h">
@@ -323,6 +326,18 @@
     <ClInclude Include="Transform.hlsl">
       <Filter>Shaders\Common</Filter>
     </ClInclude>
+    <ClInclude Include="NormalMapTwerker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderOps.hlsl">
+      <Filter>Shaders\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.hlsl">
+      <Filter>Shaders\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomXM.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hw3d.rc">
@@ -380,11 +395,11 @@
     <FxCompile Include="PhongPSNotex.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ShaderOps.hlsl">
-      <Filter>Shaders\Common</Filter>
+    <FxCompile Include="PhongPSSpec.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="PointLight.hlsl">
-      <Filter>Shaders\Common</Filter>
+    <FxCompile Include="PhongPSNormalMapObject.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
