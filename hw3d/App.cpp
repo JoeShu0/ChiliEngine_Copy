@@ -53,8 +53,8 @@ App::App( const std::string& commandLine)
 	//drawables.insert(drawables.begin(),std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
-	wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
-	tp.SetPos({ 12.0f,0.0f,0.0f });
+	//wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
+	//tp.SetPos({ 12.0f,0.0f,0.0f });
 }
 
 int App::Go()
@@ -125,13 +125,14 @@ void App::DoFrame()
 	}
 
 
-	nano.Draw(wnd.Gfx());
+	//nano.Draw(wnd.Gfx());
 	//nano2.Draw(wnd.Gfx());
 	//draw light mesh
-	wall.Draw(wnd.Gfx());
-	gobber.Draw(wnd.Gfx());
+	//wall.Draw(wnd.Gfx());
+	//gobber.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
-	tp.Draw(wnd.Gfx());
+	//tp.Draw(wnd.Gfx());
+	sponza.Draw(wnd.Gfx());
 	
 
 
@@ -192,12 +193,13 @@ void App::DoFrame()
 	//SpawnBoxWindowManagerWindow();
 	//SpawnBoxWindows();
 	ShowImguiDemoWindow();
-	nano.ShowWindow(wnd.Gfx(), "model 1");
+	//nano.ShowWindow(wnd.Gfx(), "model 1");
 	//nano2.ShowWindow("model 2");
 	//plane.SpawnControlWindow(wnd.Gfx());
-	wall.ShowWindow(wnd.Gfx(), "Wall");
-	gobber.ShowWindow(wnd.Gfx(), "gobber");
-	tp.SpawnControlWindow(wnd.Gfx());
+	//wall.ShowWindow(wnd.Gfx(), "Wall");
+	//gobber.ShowWindow(wnd.Gfx(), "gobber");
+	//tp.SpawnControlWindow(wnd.Gfx());
+	sponza.ShowWindow(wnd.Gfx(), "Sponza");
 	
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();

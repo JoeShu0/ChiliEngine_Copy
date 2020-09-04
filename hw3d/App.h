@@ -42,10 +42,11 @@ private:
 	std::optional<int> comboBoxIndex;
 	std::set<int> boxControlIds;
 	void SpawnSimulationWindow() noexcept;
-	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj", 1.0f };
+	//Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj", 1.0f };
 	//Model nano2{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	//TestPlane plane;
-	Model wall{ wnd.Gfx(), "Models\\brick_wall\\brick_wall.obj", 6.0f};
-	Model gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj", 6.0f};
-	TestPlane tp{ wnd.Gfx(),6.0 };
+	//Model wall{ wnd.Gfx(), "Models\\brick_wall\\brick_wall.obj", 6.0f};
+	//Model gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj", 6.0f};
+	//TestPlane tp{ wnd.Gfx(),6.0 };
+	Model sponza{ wnd.Gfx(), "Models\\sponza\\sponza.obj", 1.0f / 20.0f };
 };
