@@ -184,6 +184,7 @@
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="TestPlane.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TexturePreProcessor.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformCbuf.cpp" />
     <ClCompile Include="TransformCbufDouble.cpp" />
@@ -227,7 +228,6 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
-    <ClInclude Include="NormalMapTwerker.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
@@ -238,6 +238,7 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TestPlane.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TexturePreProcessor.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="TransformCbuf.h" />
     <ClInclude Include="TransformCbufDouble.h" />

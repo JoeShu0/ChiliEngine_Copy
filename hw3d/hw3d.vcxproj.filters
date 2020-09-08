@@ -168,6 +168,9 @@
     <ClCompile Include="CustomXM.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TexturePreProcessor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowsMessageMap.h">
@@ -326,9 +329,6 @@
     <ClInclude Include="Transform.hlsl">
       <Filter>Shaders\Common</Filter>
     </ClInclude>
-    <ClInclude Include="NormalMapTwerker.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderOps.hlsl">
       <Filter>Shaders\Common</Filter>
     </ClInclude>
@@ -336,6 +336,9 @@
       <Filter>Shaders\Common</Filter>
     </ClInclude>
     <ClInclude Include="CustomXM.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturePreProcessor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
