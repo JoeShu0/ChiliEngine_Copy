@@ -32,8 +32,15 @@ float4 main(float4 pos : SV_Position,
     float3 worldtangent : WTangent,
     float3 worldbitangent : WBiTangent) : SV_Target
 {
+    //Manual Ztest
     float4 dtex = tex.Sample(splr, tc);
     clip(dtex.a < 0.1f ? -1 : 1);
+
+    //flip normal when render back face
+    if(dot(worldnormal, (worldPos - CameraWPos)) > 0.0f)
+    {
+        worldnormal = -worldnormal;
+    }
     
     worldtangent = normalize(worldtangent);
     worldbitangent = normalize(worldbitangent);
@@ -84,7 +91,7 @@ float4 main(float4 pos : SV_Position,
     return float4(saturate(diffuse + ambient) * tex.Sample(splr, tc).rgb + specular * specularRColor, 1.0f);
     */
     //sample diffuse
-    float4 dtex = tex.Sample(splr, tc);
+    //float4 dtex = tex.Sample(splr, tc);
 
     const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, worldnormal);

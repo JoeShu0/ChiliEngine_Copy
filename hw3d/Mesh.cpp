@@ -317,7 +317,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		{
 			//bindablePtrs.push_back(Texture::Resolve(gfx, rootPath + textFileName.C_Str()));
 			auto tex = Texture::Resolve(gfx, rootPath + textFileName.C_Str());
-			hasDiffuseMap = tex->HasAlpha();
+			hasAlphaDiffuse = tex->HasAlpha();
 			bindablePtrs.push_back(std::move(tex));
 			hasDiffuseMap = true;
 		}
@@ -618,6 +618,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	}
 
 	//bindablePtrs.push_back(Blender::Resolve(gfx, hasAlphaDiffuse));
+	
+	//we generally consider any mesh with alpha as twosided for noew
+	bindablePtrs.push_back(Rasterizer::Resolve(gfx, hasAlphaDiffuse));
 
 	
 	/*
