@@ -32,6 +32,9 @@ float4 main(float4 pos : SV_Position,
     float3 worldtangent : WTangent,
     float3 worldbitangent : WBiTangent) : SV_Target
 {
+    float4 dtex = tex.Sample(splr, tc);
+    clip(dtex.a < 0.1f ? -1 : 1);
+    
     worldtangent = normalize(worldtangent);
     worldbitangent = normalize(worldbitangent);
     worldnormal = normalize(worldnormal);
@@ -80,9 +83,12 @@ float4 main(float4 pos : SV_Position,
     //return float4(saturate(specular) * materialColor, 1.0f);
     return float4(saturate(diffuse + ambient) * tex.Sample(splr, tc).rgb + specular * specularRColor, 1.0f);
     */
+    //sample diffuse
+    float4 dtex = tex.Sample(splr, tc);
+
     const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, worldnormal);
 
     const float3 specularReflected = Speculate(specularRColor, 1.0f, worldnormal, lv.dirToL, worldPos, CameraWPos, att, specularPower);
-    return float4(saturate((diffuse + ambient) * tex.Sample(splr, tc).rgb + specularReflected), 1.0f);
+    return float4(saturate((diffuse + ambient) * dtex.rgb + specularReflected), dtex.a);
 }

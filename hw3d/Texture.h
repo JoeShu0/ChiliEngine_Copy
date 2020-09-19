@@ -19,6 +19,8 @@ namespace Bind
 		std::string path;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
 	private:
+		static UINT CalculateNumberOfMipLevels(UINT width, UINT height) noexcept;
+	private:
 		unsigned int slot;
 	};
 }
