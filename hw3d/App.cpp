@@ -7,7 +7,7 @@
 #include "imgui/imgui.h"
 #include "VertexBuffer.h"
 #include "SkyBox.h"
-#include "TexturePreProcessor.h"
+#include "TexturePreProcessor.h" 
 #include <shellapi.h>
 
 
@@ -56,7 +56,8 @@ App::App( const std::string& commandLine)
 		}
 	}
 
-	drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
+	//no need for sky box for now
+	//drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 	//drawables.insert(drawables.begin(),std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
@@ -72,7 +73,7 @@ int App::Go()
 	while (true)// call process msg which use peekmsg to not block the loop when no msg.
 	{
 		
-		if (const auto exitcode = Window::ProcessMessages())
+		if (const auto exitcode = Window::ProcessMessages())//singleton static function
 		{
 			// if return optional has value means we have a Quit message
 			return *exitcode;
