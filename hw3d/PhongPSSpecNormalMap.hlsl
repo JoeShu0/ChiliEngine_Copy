@@ -34,13 +34,15 @@ float4 main(float4 pos : SV_Position,
 {
     //Manual Ztest
     float4 dtex = tex.Sample(splr, tc);
+    
+    #ifdef MASK_BOI
     clip(dtex.a < 0.1f ? -1 : 1);
-
     //flip normal when render back face
     if(dot(worldnormal, (worldPos - CameraWPos)) > 0.0f)
     {
         worldnormal = -worldnormal;
     }
+    #endif
     
     worldtangent = normalize(worldtangent);
     worldbitangent = normalize(worldbitangent);
