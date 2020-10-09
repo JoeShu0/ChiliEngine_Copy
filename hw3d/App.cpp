@@ -59,6 +59,7 @@ App::App( const std::string& commandLine)
 	//no need for sky box for now
 	//drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 	//drawables.insert(drawables.begin(),std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
+	bluePlane.SetPos(cam.GetPosition());
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
 	//wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
@@ -141,6 +142,7 @@ void App::DoFrame()
 	light.Draw(wnd.Gfx());
 	//tp.Draw(wnd.Gfx());
 	sponza.Draw(wnd.Gfx());
+	bluePlane.Draw(wnd.Gfx());
 	
 
 
