@@ -60,6 +60,7 @@ App::App( const std::string& commandLine)
 	//drawables.push_back(std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 	//drawables.insert(drawables.begin(),std::move(std::make_unique<SkyBox>(wnd.Gfx(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10000.0f)));
 	bluePlane.SetPos(cam.GetPosition());
+	redPlane.SetPos(cam.GetPosition());
 
 	wnd.Gfx().SetProjection(cam.GetProjMatrix());//NearPlaneWidth, NearPlaneHeight, NearZ, FarZ,this will determine FOV angle
 	//wall.SetRootTransform(dx::XMMatrixTranslation(-1.5f, 0.0f, 0.0f));
@@ -118,6 +119,8 @@ void App::DoFrame()
 		wnd.EnableCursor();
 		wnd.mouse.DisableRaw();
 	}*/
+
+	//******Draw Queue*******
 	wnd.Gfx().SetCamera(cam.GetMatrix());//set camera 
 	cam.Bind(wnd.Gfx());//Bind Camera properties(pos) to PS cbuf slot 3
 
@@ -143,7 +146,8 @@ void App::DoFrame()
 	//tp.Draw(wnd.Gfx());
 	sponza.Draw(wnd.Gfx());
 	bluePlane.Draw(wnd.Gfx());
-	
+	redPlane.Draw(wnd.Gfx());
+	//******Draw End*******
 
 
 	/*
@@ -196,7 +200,7 @@ void App::DoFrame()
 		MoveCamera(dt);
 	}
 
-	//imgui stuff
+	//*****imgui draw*****
 	SpawnSimulationWindow();
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
@@ -210,7 +214,10 @@ void App::DoFrame()
 	//gobber.ShowWindow(wnd.Gfx(), "gobber");
 	//tp.SpawnControlWindow(wnd.Gfx());
 	sponza.ShowWindow(wnd.Gfx(), "Sponza");
-	
+	bluePlane.SpawnControlWindow(wnd.Gfx(), "Blue Plane");
+	redPlane.SpawnControlWindow(wnd.Gfx(), "Red Plane");
+	//*****imgui end******
+
 	//Flush keyEvent buffer 
 	wnd.kbd.FlushKey();
 	//present
