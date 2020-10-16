@@ -9,6 +9,7 @@
 #include "SkyBox.h"
 #include "TexturePreProcessor.h" 
 #include <shellapi.h>
+#include <dxtex/DirectXTex.h>
 
 
 //#include "WindowsMessageMap.h"
@@ -24,6 +25,16 @@ App::App( const std::string& commandLine)
 	light(wnd.Gfx()),
 	cam(wnd.Gfx(), dx::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40000.0f))
 {
+	/*
+	//dxtex test code
+	auto scratch = DirectX::ScratchImage{};
+	DirectX::LoadFromWICFile(L"Images\\brickwall.jpg", DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+	auto image = scratch.GetImage(0, 0, 0);
+	auto a = image->pixels[0];
+	auto b = image->pixels[1];
+	auto c = image->pixels[2];
+	auto d = image->pixels[3];
+	*/
 	//make shift to CLI to do some preprocessing stuff
 	if (this->commandLine != "")
 	{
