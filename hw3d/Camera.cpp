@@ -111,3 +111,4 @@ void Camera::UpdateCCBufforPS() noexcept
 {
 	CCBuf.pos = Pos;
 }
+

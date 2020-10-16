@@ -22,18 +22,18 @@ namespace Bind
 		D3D11_TEXTURE2D_DESC textureDesc = {};
 		textureDesc.Width = s.GetWidth();
 		textureDesc.Height = s.GetHeight();
-		textureDesc.MipLevels = 0;
+		textureDesc.MipLevels = 0;//tell DX we want all the mip levels
 		textureDesc.ArraySize = 1;
 		textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.SampleDesc.Quality = 0;
 		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;//since we are going to gen mips into this texture, it should also be a render target
 		textureDesc.CPUAccessFlags = 0;
-		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;//flag for mip gen
 		//D3D11_SUBRESOURCE_DATA sd = {};
 		//sd.pSysMem = s.GetBufferPtr();
-		//sd.SysMemPitch = s.GetWidth() * sizeof(Surface::Color);
+		//sd.SysMemPitch = s.GetWidth() * sizeof(Surface::Color);// we not initiallize sd but update it after creation
 		wrl::ComPtr<ID3D11Texture2D> pTexture;
 		GFX_THROW_INFO(GetDevice(gfx)->CreateTexture2D(
 			&textureDesc, nullptr, &pTexture
@@ -49,7 +49,7 @@ namespace Bind
 		srvDesc.Format = textureDesc.Format;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = -1;
+		srvDesc.Texture2D.MipLevels = -1;//use all the mips avalible
 		GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(
 			pTexture.Get(), &srvDesc, &pTextureView
 		));

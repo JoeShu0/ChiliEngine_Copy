@@ -397,7 +397,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		auto pvsbc = pvs->GetBytecode();
 		bindablePtrs.push_back(std::move(pvs));
 
-		bindablePtrs.push_back(PixelShader::Resolve(gfx, "PhongPSSpecNormalMap.cso"));
+		//bindablePtrs.push_back(PixelShader::Resolve(gfx, "PhongPSSpecNormalMap.cso"));
+		bindablePtrs.push_back(PixelShader::Resolve(gfx, 
+			hasAlphaDiffuse ? "PhongPSSpecNormalMask.cso" : "PhongPSSpecNormalMap.cso" ));
 		bindablePtrs.push_back(InputLayout::Resolve(gfx, vbuf.GetLayout(), pvsbc));
 		Node::PSMaterialConstantFullmonte pmc;
 		pmc.specularPower = shininess;
@@ -617,7 +619,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		throw std::runtime_error("terrible combination of textures in material smh");
 	}
 
-	//bindablePtrs.push_back(Blender::Resolve(gfx, hasAlphaDiffuse));
+	bindablePtrs.push_back(Blender::Resolve(gfx, false));
 	
 	//we generally consider any mesh with alpha as twosided for noew
 	bindablePtrs.push_back(Rasterizer::Resolve(gfx, hasAlphaDiffuse));
