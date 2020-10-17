@@ -265,3 +265,6 @@ __pycache__/
 *.pyc
 *.cso
 /hw3d/imgui.ini
+
+#Bind lib for dxtex
+!/hw3d/dxtex/bin/
