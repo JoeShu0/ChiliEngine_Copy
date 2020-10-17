@@ -267,4 +267,4 @@ __pycache__/
 /hw3d/imgui.ini
 
 #Bind lib for dxtex
-!/hw3d/dxtex/bin/
+!/hw3d/dxtex/bin/**
